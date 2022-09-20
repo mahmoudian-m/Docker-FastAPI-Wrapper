@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from api.docker_api.router import docker_wrapper
-
+from api.docker_swarm_api.router import docker_swarm_wrapper
 app = FastAPI(title='DockerWrapper',
               description='API Wrapper for docker',
               version='0.0.1', )
@@ -12,3 +12,4 @@ def health_check():
 
 
 app.include_router(docker_wrapper)
+app.include_router(docker_swarm_wrapper)

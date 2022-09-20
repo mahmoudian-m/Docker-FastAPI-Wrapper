@@ -7,7 +7,6 @@ docker_wrapper = APIRouter()
 
 ROOTPATH = '/docker/'
 DOCKERTAG = 'Docker'
-SWARMTAG = "Docker Swarm"
 
 
 @docker_wrapper.get(ROOTPATH + 'container/ls/', response_model=DockerLsResponseModel, tags=[DOCKERTAG])
@@ -32,4 +31,3 @@ async def docker_network_ls():
     if networks["ResponseCode"] != SUCCESS_CODE:
         return {"ErrorCode": networks["ResponseCode"], "Message": networks["Value"]}
     return {"Networks": networks["Value"]}
-
