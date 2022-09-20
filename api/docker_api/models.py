@@ -47,3 +47,10 @@ class DockerNetworkResponseModel(DockerResponseModel):
     Networks: list[DockerNetworkLsResponseModelItems] = None
 
 
+class DockerImageRmResponseModel(DockerResponseModel):
+    ImageID: str
+
+
+class DockerImageRmRequestModel(BaseModel):
+    ImageID: str
+    Forced: bool = False

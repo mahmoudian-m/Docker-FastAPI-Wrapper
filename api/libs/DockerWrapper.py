@@ -8,6 +8,7 @@ class DockerWrapper:
     docker_ls = """docker container ls --all --format '{"ContainerID":"{{ .ID }}", "Image": "{{ .Image }}", "CreatedAt":"{{ .CreatedAt }}","Status":"{{.Status}}","Ports":"{{.Ports}}","ContainerName":"{{.Names}}","Mounts":"{{.Mounts}}","RunningFor":"{{.RunningFor}}"}'
         """
     image_ls = """docker image ls --format '{"ContainerID":"{{ .ID }}","CreatedAt":"{{.CreatedAt}}","CreatedSince":"{{.CreatedSince}}","ID":"{{.ID}}","Repository":"{{.Repository}}","Size":"{{.Size}}","Tag":"{{.Tag}}"}'"""
+    image_rm = """docker image rm {} {}"""
     network_ls = """docker network ls --format '{"ID":"{{ .ID }}","Name":"{{.Name}}","Driver":"{{.Driver}}","Scope":"{{.Scope}}"}'"""
     node_ls = """docker node ls --format '{"Availability":"{{ .Availability }}","EngineVersion":"{{.EngineVersion}}","Hostname":"{{.Hostname}}","ID":"{{.ID}}","ManagerStatus":"{{.ManagerStatus}}","Status":"{{.Status}}"}'"""
     service_ls = """docker service ls  --format '{"ID":"{{ .ID }}","Name":"{{.Name}}","Image":"{{.Image}}","Mode":"{{.Mode}}","Ports":"{{.Ports}}","Replicas":"{{.Replicas}}"}'"""
@@ -117,6 +118,15 @@ class DockerWrapper:
     def docker_service_rm(service_name):
         result = DockerWrapper.execute_command(DockerWrapper.service_rm.format(service_name))
         if result['ResponseCode'] == SUCCESS_CODE:
+            return {'ResponseCode': SUCCESS_CODE, 'Value': result['Value']}
+        else:
+            return {'ResponseCode': result['ResponseCode'], 'Value': result['Value']}
+
+    @staticmethod
+    def docker_image_rm(image_id, forced=False):
+        print(image_id, forced)
+        result = DockerWrapper.execute_command(DockerWrapper.image_rm.format(' -f' if forced else " ", image_id))
+        if result['ResponseCode'] != SUCCESS_CODE:
             return {'ResponseCode': SUCCESS_CODE, 'Value': result['Value']}
         else:
             return {'ResponseCode': result['ResponseCode'], 'Value': result['Value']}

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from api.docker_api.models import DockerLsResponseModel, DockerImageResponseModel, DockerNetworkResponseModel
+from api.docker_api.models import DockerLsResponseModel, DockerImageResponseModel, DockerNetworkResponseModel, \
+    DockerImageRmResponseModel, DockerImageRmRequestModel
 from api.libs import DockerWrapper
 from config.config import SUCCESS_CODE
 
@@ -31,3 +32,11 @@ async def docker_network_ls():
     if networks["ResponseCode"] != SUCCESS_CODE:
         return {"ErrorCode": networks["ResponseCode"], "Message": networks["Value"]}
     return {"Networks": networks["Value"]}
+
+
+@docker_wrapper.post(ROOTPATH + 'image/rm/', response_model=DockerImageRmResponseModel, tags=[DOCKERTAG])
+async def docker_service_rm(request: DockerImageRmRequestModel):
+    image_rm = DockerWrapper.DockerWrapper.docker_image_rm(request.ImageID, request.Forced)
+    if image_rm["ResponseCode"] != SUCCESS_CODE:
+        return {"ErrorCode": image_rm["ResponseCode"], "Message": image_rm["Value"]}
+    return {"ImageID": image_rm["Value"]}
